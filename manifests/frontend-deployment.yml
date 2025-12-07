@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plenartrend-frontend
+  namespace: plenartrend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: plenartrend-frontend
+  template:
+    metadata:
+      labels:
+        app: plenartrend-frontend
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - plenartrend-frontend
+              topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+      - name: docker-registry-secret
+      containers:
+      - name: frontend
+        image: registry.sokutan.de/plenartrend/frontend:preview
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+
