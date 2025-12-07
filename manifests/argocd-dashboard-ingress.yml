@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/redirect-to-https: "true"
+    # ArgoCD specific: preserve original request scheme
+    traefik.ingress.kubernetes.io/headers.customrequestheaders: "X-Forwarded-Proto=https"
+spec:
+  ingressClassName: traefik
+  tls:
+  - hosts:
+    - argo.plenartrend.de
+    secretName: argocd-tls
+  rules:
+  - host: argo.plenartrend.de
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80
+
