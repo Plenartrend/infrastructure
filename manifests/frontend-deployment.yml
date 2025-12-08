@@ -30,6 +30,7 @@ spec:
       containers:
       - name: frontend
         image: registry.sokutan.de/plenartrend/frontend:preview
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
           name: http
