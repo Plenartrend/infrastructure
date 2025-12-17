@@ -1,2 +1,3 @@
 /hetzner/.terraform/*
 .idea/*
+hetzner/extra-manifests/sealed-secrets-key.yaml.tpl
