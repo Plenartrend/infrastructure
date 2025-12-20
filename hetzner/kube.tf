@@ -9,6 +9,8 @@ locals {
 
 # Export your Cloudflare API token with "export CLOUDFLARE_API_TOKEN=xxxxxxxxxxx"
 
+# After creation you can extract the argo cd PW with kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
 module "kube-hetzner" {
   providers = {
     hcloud = hcloud
@@ -876,6 +878,17 @@ module "kube-hetzner" {
   extra_kustomize_deployment_commands = <<-EOT
     kubectl wait secret -l sealedsecrets.bitnami.com/sealed-secrets-key=active -n kube-system --timeout=120s
     kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.26.0/controller.yaml
+
+    kubectl create namespace argocd
+    kubectl apply -f /var/user_kustomize/argo-repository.yaml
+
+    while ! kubectl get crd applications.argoproj.io > /dev/null 2>&1; do
+      echo "Waiting for Argo Application CRD..."
+      sleep 5
+    done
+
+    kubectl wait --for condition=established --timeout=120s crd/applications.argoproj.io
+    kubectl apply -f /var/user_kustomize/argo-application.yaml
   EOT
 
   # Extra values that will be passed to the `extra-manifests/kustomization.yaml.tpl` if its present.

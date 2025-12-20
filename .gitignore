@@ -1,3 +1,4 @@
 /hetzner/.terraform/*
 .idea/*
 hetzner/extra-manifests/sealed-secrets-key.yaml.tpl
+hetzner/extra-manifests/argo-repository.yaml.tpl
