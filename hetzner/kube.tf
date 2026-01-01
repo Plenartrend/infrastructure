@@ -876,6 +876,10 @@ module "kube-hetzner" {
 
   # Extra commands to be executed after the `kubectl apply -k` (useful for post-install actions, e.g. wait for CRD, apply additional manifests, etc.).
   extra_kustomize_deployment_commands = <<-EOT
+    helm repo add hcloud https://charts.hetzner.cloud
+    helm repo update hcloud
+    helm upgrade --install hcloud-csi hcloud/hcloud-csi --namespace kube-system --set token="${var.hcloud_token != "" ? var.hcloud_token : local.hcloud_token}" --wait
+
     kubectl wait secret -l sealedsecrets.bitnami.com/sealed-secrets-key=active -n kube-system --timeout=120s
     kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.26.0/controller.yaml
 

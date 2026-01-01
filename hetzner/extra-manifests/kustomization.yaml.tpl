@@ -10,3 +10,6 @@ resources:
   # ArgoCD
   - argocd-helm.yaml
 
+  # CloudNativePG
+  - cnpg-helm.yaml
+
