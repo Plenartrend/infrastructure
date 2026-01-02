@@ -36,12 +36,12 @@ spec:
   
   bootstrap:
     recovery:
-      source: postgresql-db-backup
+      source: postgresql-db
       recoveryTarget:
         targetTLI: latest
   
   externalClusters:
-    - name: postgresql-db-backup
+    - name: postgresql-db
       barmanObjectStore:
         destinationPath: s3://plt-db-backup/postgres/backups
         endpointURL: https://fsn1.your-objectstorage.com
