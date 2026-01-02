@@ -4,7 +4,7 @@ metadata:
   name: plenartrend-frontend
   namespace: plenartrend
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: plenartrend-frontend

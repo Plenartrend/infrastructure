@@ -878,7 +878,7 @@ module "kube-hetzner" {
   extra_kustomize_deployment_commands = <<-EOT
     helm repo add hcloud https://charts.hetzner.cloud
     helm repo update hcloud
-    helm upgrade --install hcloud-csi hcloud/hcloud-csi --namespace kube-system --set token="${var.hcloud_token != "" ? var.hcloud_token : local.hcloud_token}" --wait
+    helm upgrade --install hcloud-csi hcloud/hcloud-csi --namespace kube-system --set token="${var.hcloud_token != "" ? var.hcloud_token : local.hcloud_token}" --set "storageClasses[0].name=hcloud-volumes" --set "storageClasses[0].defaultStorageClass=true" --set "storageClasses[0].reclaimPolicy=Delete" --wait
 
     kubectl wait secret -l sealedsecrets.bitnami.com/sealed-secrets-key=active -n kube-system --timeout=120s
     kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.26.0/controller.yaml

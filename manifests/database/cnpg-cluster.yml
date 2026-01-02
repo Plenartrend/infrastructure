@@ -35,8 +35,20 @@ spec:
       max_wal_size: "4GB"
   
   bootstrap:
-    initdb:
-      database: plenartrend
+    recovery:
+      source: postgresql-db
+      recoveryTarget:
+        targetTLI: latest
+      barmanObjectStore:
+        destinationPath: s3://plt-db-backup/postgres/backups
+        endpointURL: https://fsn1.your-objectstorage.com
+        s3Credentials:
+          accessKeyId:
+            name: hetzner-s3-credentials
+            key: HETZNER_ACCESS_KEY
+          secretAccessKey:
+            name: hetzner-s3-credentials
+            key: HETZNER_SECRET_KEY
   
   backup:
     barmanObjectStore:
