@@ -55,6 +55,7 @@ spec:
   
   backup:
     barmanObjectStore:
+      serverName: "postgresql-db-v2"
       destinationPath: s3://plt-db-backup/postgres/backups
       endpointURL: https://fsn1.your-objectstorage.com
       s3Credentials:
