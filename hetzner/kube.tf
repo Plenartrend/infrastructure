@@ -1170,12 +1170,41 @@ terraform {
       source  = "hetznercloud/hcloud"
       version = ">= 1.51.0"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = ">= 3.0.0"
+    }
   }
 }
 
 output "kubeconfig" {
   value     = module.kube-hetzner.kubeconfig
   sensitive = true
+}
+
+resource "null_resource" "cleanup_pvcs_before_destroy" {
+  depends_on = [module.kube-hetzner]
+
+  triggers = {
+    kubeconfig = module.kube-hetzner.kubeconfig
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<-EOT
+      set +e
+      KUBECONFIG_FILE=$(mktemp)
+      cat > "$KUBECONFIG_FILE" <<'KUBECONFIG_EOF'
+${self.triggers.kubeconfig}
+KUBECONFIG_EOF
+      export KUBECONFIG="$KUBECONFIG_FILE"
+      kubectl delete pvc --all --all-namespaces --timeout=60s 2>/dev/null || true
+      sleep 30
+      rm -f "$KUBECONFIG_FILE"
+    EOT
+
+    on_failure = continue
+  }
 }
 
 variable "hcloud_token" {

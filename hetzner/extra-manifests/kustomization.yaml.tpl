@@ -13,3 +13,6 @@ resources:
   # CloudNativePG
   - cnpg-helm.yaml
 
+  # Prometheus & Grafana
+  - prometheus-helm.yaml
+
