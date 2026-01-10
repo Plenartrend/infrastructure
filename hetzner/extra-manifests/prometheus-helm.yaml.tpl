@@ -37,7 +37,7 @@ spec:
               accessModes: ["ReadWriteOnce"]
               resources:
                 requests:
-                  storage: 50Gi
+                  storage: 20Gi
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
         ruleSelectorNilUsesHelmValues: false
@@ -92,4 +92,3 @@ spec:
         nodeExporterRecording: true
         prometheus: true
         prometheusOperator: true
-

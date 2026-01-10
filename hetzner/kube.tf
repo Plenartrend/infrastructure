@@ -533,7 +533,7 @@ module "kube-hetzner" {
   #   This is not a problem if you explicitly define which storageclass to use in your PVCs.
   #   Workaround if you don't want two default storage classes: leave this to false and add the local-path-provisioner helm chart
   #   as an extra (https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner#adding-extras).
-  # enable_local_storage = false
+  enable_local_storage = true
 
   # If you want to allow non-control-plane workloads to run on the control-plane nodes, set this to "true". The default is "false".
   # True by default for single node clusters, and when enable_klipper_metal_lb is true. In those cases, the value below will be ignored.
@@ -1170,41 +1170,12 @@ terraform {
       source  = "hetznercloud/hcloud"
       version = ">= 1.51.0"
     }
-    null = {
-      source  = "hashicorp/null"
-      version = ">= 3.0.0"
-    }
   }
 }
 
 output "kubeconfig" {
   value     = module.kube-hetzner.kubeconfig
   sensitive = true
-}
-
-resource "null_resource" "cleanup_pvcs_before_destroy" {
-  depends_on = [module.kube-hetzner]
-
-  triggers = {
-    kubeconfig = module.kube-hetzner.kubeconfig
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = <<-EOT
-      set +e
-      KUBECONFIG_FILE=$(mktemp)
-      cat > "$KUBECONFIG_FILE" <<'KUBECONFIG_EOF'
-${self.triggers.kubeconfig}
-KUBECONFIG_EOF
-      export KUBECONFIG="$KUBECONFIG_FILE"
-      kubectl delete pvc --all --all-namespaces --timeout=60s 2>/dev/null || true
-      sleep 30
-      rm -f "$KUBECONFIG_FILE"
-    EOT
-
-    on_failure = continue
-  }
 }
 
 variable "hcloud_token" {
