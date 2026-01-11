@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: node-health-dashboard
+  name: cluster-health-dashboard
   namespace: monitoring
   labels:
     grafana_dashboard: "1"
 data:
-  node-health-dashboard.json: |-
+  cluster-health-dashboard.json: |-
     {
       "annotations": {
         "list": [
@@ -38,44 +38,12 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "mode": "palette-classic"
+                "mode": "thresholds"
               },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "showValues": false,
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "displayName": "${__field.labels.pod}",
+              "displayName": "${__field.labels.nodename}",
               "mappings": [],
+              "max": 100,
+              "min": 0,
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
@@ -84,8 +52,8 @@ data:
                     "value": 0
                   },
                   {
-                    "color": "red",
-                    "value": 80
+                    "color": "#F2495C",
+                    "value": 70
                   }
                 ]
               }
@@ -98,32 +66,43 @@ data:
             "x": 0,
             "y": 0
           },
-          "id": 6,
+          "id": 3,
           "options": {
+            "displayMode": "gradient",
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "right",
-              "showLegend": true
+              "placement": "bottom",
+              "showLegend": false
             },
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "single",
-              "sort": "none"
-            }
+            "maxVizHeight": 300,
+            "minVizHeight": 0,
+            "minVizWidth": 8,
+            "namePlacement": "top",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
           },
           "pluginVersion": "12.3.1",
           "targets": [
             {
               "editorMode": "code",
-              "expr": "topk(10, \n  sum by (pod, namespace) (\n    container_memory_working_set_bytes{container!=\"\"}\n  )\n) / 1024 / 1024",
+              "expr": "sum by (node) (\n  (1 - avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m]))) * 100\n  * on(instance) group_left(node) label_replace(node_uname_info, \"node\", \"$1\", \"nodename\", \"(.*)\")\n)",
               "legendFormat": "__auto",
               "range": true,
               "refId": "A"
             }
           ],
-          "title": "Top 10 Memory Usage by Pod (MB)",
-          "type": "timeseries"
+          "title": "CPU Utilization",
+          "type": "bargauge"
         },
         {
           "datasource": {
@@ -190,7 +169,7 @@ data:
           "targets": [
             {
               "editorMode": "code",
-              "expr": "((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100) \n* on(instance) group_left(nodename) (node_uname_info)",
+              "expr": "sum by (nodename) (\n  ((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100)\n  * on(instance) group_left(nodename) node_uname_info\n)",
               "legendFormat": "__auto",
               "range": true,
               "refId": "A"
@@ -209,23 +188,42 @@ data:
               "color": {
                 "mode": "thresholds"
               },
-              "displayName": "${__field.labels.nodename}",
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
               "mappings": [],
-              "max": 100,
-              "min": 0,
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
+                    "color": "red",
                     "value": 0
                   },
                   {
-                    "color": "#F2495C",
-                    "value": 70
+                    "color": "green",
+                    "value": 3
                   }
                 ]
-              }
+              },
+              "unit": "short"
             },
             "overrides": []
           },
@@ -235,43 +233,46 @@ data:
             "x": 0,
             "y": 8
           },
-          "id": 3,
+          "id": 1,
           "options": {
-            "displayMode": "gradient",
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "colorByField": "Value",
+            "fullHighlight": false,
+            "groupWidth": 0.7,
             "legend": {
               "calcs": [],
               "displayMode": "list",
               "placement": "bottom",
               "showLegend": false
             },
-            "maxVizHeight": 300,
-            "minVizHeight": 0,
-            "minVizWidth": 8,
-            "namePlacement": "top",
-            "orientation": "horizontal",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
             },
-            "showUnfilled": true,
-            "sizing": "auto",
-            "valueMode": "color"
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
           },
           "pluginVersion": "12.3.1",
           "targets": [
             {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
               "editorMode": "code",
-              "expr": "sum by (node) (\n  (1 - avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m]))) * 100\n  * on(instance) group_left(node) label_replace(node_uname_info, \"node\", \"$1\", \"nodename\", \"(.*)\")\n)",
+              "expr": "count(\n  kube_node_role{role=\"control-plane\"} \n  * on(node) \n  kube_node_status_condition{condition=\"Ready\", status=\"true\"}\n)",
               "legendFormat": "__auto",
               "range": true,
               "refId": "A"
             }
           ],
-          "title": "CPU Utilization",
-          "type": "bargauge"
+          "title": "Control Plane Amount",
+          "type": "barchart"
         },
         {
           "datasource": {
@@ -399,42 +400,23 @@ data:
               "color": {
                 "mode": "thresholds"
               },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "fillOpacity": 80,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineWidth": 1,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
+              "displayName": "${__field.labels.node}",
               "mappings": [],
+              "max": 100,
+              "min": 0,
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red",
+                    "color": "green",
                     "value": 0
                   },
                   {
-                    "color": "green",
-                    "value": 3
+                    "color": "red",
+                    "value": 80
                   }
                 ]
-              },
-              "unit": "short"
+              }
             },
             "overrides": []
           },
@@ -444,46 +426,121 @@ data:
             "x": 0,
             "y": 16
           },
-          "id": 1,
+          "id": 9,
           "options": {
-            "barRadius": 0,
-            "barWidth": 0.97,
-            "colorByField": "Value",
-            "fullHighlight": false,
-            "groupWidth": 0.7,
+            "displayMode": "gradient",
             "legend": {
               "calcs": [],
               "displayMode": "list",
               "placement": "bottom",
               "showLegend": false
             },
-            "orientation": "auto",
-            "showValue": "auto",
-            "stacking": "none",
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "single",
-              "sort": "none"
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
             },
-            "xTickLabelRotation": 0,
-            "xTickLabelSpacing": 0
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
           },
           "pluginVersion": "12.3.1",
           "targets": [
             {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
               "editorMode": "code",
-              "expr": "count(\n  kube_node_role{role=\"control-plane\"} \n  * on(node) \n  kube_node_status_condition{condition=\"Ready\", status=\"true\"}\n)",
+              "expr": "sum by (nodename) (\n  (\n    node_memory_working_set_bytes \n    / \n    on(node) group_left() kube_node_status_allocatable{resource=\"memory\"}\n  ) * 100\n  * on(node) group_left(nodename) label_replace(node_uname_info, \"node\", \"$1\", \"nodename\", \"(.*)\")\n)",
               "legendFormat": "__auto",
               "range": true,
               "refId": "A"
             }
           ],
-          "title": "Control Plane Amount",
-          "type": "barchart"
+          "title": "Memory Utilization (k3s Level)",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "displayName": "${__field.labels.node}",
+              "mappings": [
+                {
+                  "options": {
+                    "0": {
+                      "index": 0,
+                      "text": "false"
+                    },
+                    "1": {
+                      "index": 1,
+                      "text": "true"
+                    }
+                  },
+                  "type": "value"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 1
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 12,
+            "y": 16
+          },
+          "id": 8,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.1",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "kube_node_status_condition{condition=\"MemoryPressure\", status=\"true\"}",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Memory Pressure",
+          "type": "stat"
         },
         {
           "datasource": {
@@ -512,9 +569,9 @@ data:
           },
           "gridPos": {
             "h": 4,
-            "w": 5,
-            "x": 0,
-            "y": 24
+            "w": 3,
+            "x": 19,
+            "y": 16
           },
           "id": 5,
           "options": {
@@ -546,6 +603,70 @@ data:
           ],
           "title": "Frontend Pods Online",
           "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": 0
+                  },
+                  {
+                    "color": "green",
+                    "value": 3
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 3,
+            "x": 19,
+            "y": 20
+          },
+          "id": 7,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.1",
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum(cnpg_collector_up)",
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Database Instances Online",
+          "type": "stat"
         }
       ],
       "preload": false,
@@ -560,7 +681,8 @@ data:
       },
       "timepicker": {},
       "timezone": "browser",
-      "title": "Node Health",
+      "title": "Cluster Health",
       "uid": null,
       "version": 0
     }
+
