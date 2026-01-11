@@ -24,6 +24,15 @@ spec:
         enabled: true
         size: 10Gi
         storageClassName: local-path
+      sidecar:
+        dashboards:
+          enabled: true
+          label: grafana_dashboard
+          labelValue: "1"
+          folder: /tmp/dashboards
+          searchNamespace: monitoring
+          provider:
+            foldersFromFilesStructure: true
     
     # Prometheus Configuration
     prometheus:
@@ -62,6 +71,15 @@ spec:
     # Kube State Metrics
     kubeStateMetrics:
       enabled: true
+    
+    # Kubelet Metrics
+    kubelet:
+      enabled: true
+      serviceMonitor:
+        cAdvisor: true
+        probes: true
+        resource: true
+        resourcePath: "/metrics/resource"
     
     # Default rules and dashboards
     defaultRules:

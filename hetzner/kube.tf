@@ -203,19 +203,19 @@ module "kube-hetzner" {
     },
   ]
   # Add additional configuration options for control planes here.
-  # E.g to enable monitoring for etcd, proxy etc:
-  # control_planes_custom_config = {
-  #  etcd-expose-metrics = true,
-  #  kube-controller-manager-arg = "bind-address=0.0.0.0",
-  #  kube-proxy-arg ="metrics-bind-address=0.0.0.0",
-  #  kube-scheduler-arg = "bind-address=0.0.0.0",
-  # }
+  # Enable monitoring for etcd, proxy, controller-manager, scheduler and kubelet
+  control_planes_custom_config = {
+    etcd-expose-metrics          = true
+    kube-controller-manager-arg  = "bind-address=0.0.0.0"
+    kube-proxy-arg               = "metrics-bind-address=0.0.0.0"
+    kube-scheduler-arg           = "bind-address=0.0.0.0"
+  }
 
   # Add additional configuration options for agent nodes and autoscaler nodes here.
-  # E.g to enable monitoring for proxy:
-  # agent_nodes_custom_config = {
-  #  kube-proxy-arg ="metrics-bind-address=0.0.0.0",
-  # }
+  # Enable monitoring for proxy on agent nodes
+  agent_nodes_custom_config = {
+    kube-proxy-arg = "metrics-bind-address=0.0.0.0"
+  }
 
   # You can enable encrypted wireguard for the CNI by setting this to "true". Default is "false".
   # FYI, Hetzner says "Traffic between cloud servers inside a Network is private and isolated, but not automatically encrypted."
