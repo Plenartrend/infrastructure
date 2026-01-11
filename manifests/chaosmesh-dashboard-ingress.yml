@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chaosmesh-dashboard
+  namespace: chaos-mesh
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/redirect-to-https: "true"
+spec:
+  ingressClassName: traefik
+  tls:
+  - hosts:
+    - chaosmesh.plenartrend.de
+    secretName: chaos-dashboard-tls
+  rules:
+  - host: chaosmesh.plenartrend.de
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: chaos-dashboard
+            port:
+              number: 2333
+
+
