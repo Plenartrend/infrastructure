@@ -30,7 +30,7 @@ spec:
       containers:
       - name: frontend
         image: registry.sokutan.de/plenartrend/frontend:446beb1fb5839ba2a38b66d619050123f3fcf294
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
           name: http
