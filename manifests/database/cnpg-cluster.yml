@@ -9,6 +9,10 @@ spec:
 
   minSyncReplicas: 1
   maxSyncReplicas: 1
+
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: postgres-superuser-secret
   
   storage:
     size: 10Gi
