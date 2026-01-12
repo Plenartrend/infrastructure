@@ -41,6 +41,10 @@ spec:
   bootstrap:
     recovery:
       source: postgresql-db
+      database: plenartrend
+      owner: admin
+      secret:
+        name: postgres-admin-secret
       recoveryTarget:
         targetTLI: latest
   

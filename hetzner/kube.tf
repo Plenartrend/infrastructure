@@ -9,7 +9,8 @@ locals {
 
 # Export your Cloudflare API token with "export CLOUDFLARE_API_TOKEN=xxxxxxxxxxx"
 
-# After creation you can extract the argo cd PW with kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+# After creation you can extract the argo cd PW with: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+# For chaosmesh it's: kubectl create token chaos-dashboard  -n chaos-mesh
 
 module "kube-hetzner" {
   providers = {
