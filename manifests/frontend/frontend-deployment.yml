@@ -31,6 +31,13 @@ spec:
       - name: frontend
         image: registry.sokutan.de/plenartrend/frontend:f9932a59345be0499127d71632de2bbeda1e8f0e
         imagePullPolicy: IfNotPresent
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          failureThreshold: 2
         ports:
         - containerPort: 3000
           name: http
@@ -40,5 +47,5 @@ spec:
             cpu: "100m"
           limits:
             memory: "512Mi"
-            cpu: "200m"
+            cpu: "1000m"
 
