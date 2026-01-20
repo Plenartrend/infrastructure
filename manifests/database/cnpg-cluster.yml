@@ -40,7 +40,7 @@ spec:
   
   bootstrap:
     recovery:
-      source: postgresql-db
+      source: postgresql-db-v2
       database: plenartrenddb
       owner: admin
       secret:
@@ -49,7 +49,7 @@ spec:
         targetTLI: latest
   
   externalClusters:
-    - name: postgresql-db
+    - name: postgresql-db-v2
       barmanObjectStore:
         destinationPath: s3://plt-db-backup/postgres/backups
         endpointURL: https://fsn1.your-objectstorage.com
@@ -63,7 +63,7 @@ spec:
   
   backup:
     barmanObjectStore:
-      serverName: "postgresql-db-v2"
+      serverName: "postgresql-db-v3"
       destinationPath: s3://plt-db-backup/postgres/backups
       endpointURL: https://fsn1.your-objectstorage.com
       s3Credentials:

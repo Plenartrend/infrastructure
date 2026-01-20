@@ -132,9 +132,55 @@ module "kube-hetzner" {
 
   control_plane_nodepools = [
     {
-      name        = "control-plane-fsn1",
-      server_type = "cx23",
-      location    = "fsn1",
+      name        = "control-plane-one",
+      server_type = "cx33",
+      location    = "nbg1",
+      labels      = [],
+      taints      = [],
+      count       = 1
+      # swap_size   = "2G" # remember to add the suffix, examples: 512M, 1G
+      # zram_size   = "2G" # remember to add the suffix, examples: 512M, 1G
+      # kubelet_args = ["kube-reserved=cpu=250m,memory=1500Mi,ephemeral-storage=1Gi", "system-reserved=cpu=250m,memory=300Mi"]
+
+      # Fine-grained control over placement groups (nodes in the same group are spread over different physical servers, 10 nodes per placement group max):
+      # placement_group = "default"
+
+      # Enable automatic backups via Hetzner (default: false)
+      # backups = true
+
+      # To disable public ips (default: false)
+      # WARNING: If both values are set to "true", your server will only be accessible via a private network. Make sure you have followed
+      # the instructions regarding this type of setup in README.md: "Use only private IPs in your cluster".
+      # disable_ipv4 = true
+      # disable_ipv6 = true
+    },
+    {
+      name        = "control-plane-two",
+      server_type = "cx33",
+      location    = "nbg1",
+      labels      = [],
+      taints      = [],
+      count       = 1
+      # swap_size   = "2G" # remember to add the suffix, examples: 512M, 1G
+      # zram_size   = "2G" # remember to add the suffix, examples: 512M, 1G
+      # kubelet_args = ["kube-reserved=cpu=250m,memory=1500Mi,ephemeral-storage=1Gi", "system-reserved=cpu=250m,memory=300Mi"]
+
+      # Fine-grained control over placement groups (nodes in the same group are spread over different physical servers, 10 nodes per placement group max):
+      # placement_group = "default"
+
+      # Enable automatic backups via Hetzner (default: false)
+      # backups = true
+
+      # To disable public ips (default: false)
+      # WARNING: If both values are set to "true", your server will only be accessible via a private network. Make sure you have followed
+      # the instructions regarding this type of setup in README.md: "Use only private IPs in your cluster".
+      # disable_ipv4 = true
+      # disable_ipv6 = true
+    }, 
+    {
+      name        = "control-plane-three",
+      server_type = "cx33",
+      location    = "nbg1",
       labels      = [],
       taints      = [],
       count       = 1
@@ -160,7 +206,7 @@ module "kube-hetzner" {
     {
       name        = "worker-node-one",
       server_type = "cx23",
-      location    = "fsn1",
+      location    = "nbg1",
       labels      = [],
       taints      = [],
       count       = 1
