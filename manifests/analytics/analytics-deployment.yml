@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plenartrend-analytics
+  namespace: plenartrend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: plenartrend-analytics
+  template:
+    metadata:
+      labels:
+        app: plenartrend-analytics
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - plenartrend-analytics
+              topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+      - name: docker-registry-secret
+      containers:
+      - name: analytics
+        image: registry.sokutan.de/plenartrend/analytics:preview
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-admin-secret
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-admin-secret
+                key: password
+          - name: DATABASE_HOST_NAME
+            value: "postgresql-db-rw.plenartrend.svc.cluster.local"
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_NAME
+            value: "plenartrenddb"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+
