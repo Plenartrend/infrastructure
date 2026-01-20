@@ -41,7 +41,7 @@ spec:
   bootstrap:
     recovery:
       source: postgresql-db
-      database: plenartrend
+      database: plenartrenddb
       owner: admin
       secret:
         name: postgres-admin-secret
