@@ -7,6 +7,8 @@ metadata:
     release: kube-prometheus-stack
 spec:
   jobName: plenartrend-de-http
+  interval: 5s
+  scrapeTimeout: 4s
   prober:
     url: prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
   module: http_2xx
