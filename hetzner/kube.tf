@@ -285,10 +285,10 @@ module "kube-hetzner" {
   # load_balancer_algorithm_type = "least_connections"
 
   # Specifies the interval at which a health check is performed. Minimum is 3s (default: 15s).
-  # load_balancer_health_check_interval = "5s"
+  load_balancer_health_check_interval = "5s"
 
   # Specifies the timeout of a single health check. Must not be greater than the health check interval. Minimum is 1s (default: 10s).
-  # load_balancer_health_check_timeout = "3s"
+  load_balancer_health_check_timeout = "3s"
 
   # Specifies the number of times a health check is retried before a target is marked as unhealthy. (default: 3)
   # load_balancer_health_check_retries = 3
