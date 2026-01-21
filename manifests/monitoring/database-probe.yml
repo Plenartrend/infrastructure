@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: cnpg-rw-service-tcp
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  jobName: cnpg-rw-service-tcp
+  prober:
+    url: prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
+  module: tcp_connect
+  targets:
+    staticConfig:
+      static:
+        - postgresql-db-rw.plenartrend.svc.cluster.local:5432
+

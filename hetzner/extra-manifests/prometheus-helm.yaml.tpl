@@ -50,6 +50,7 @@ spec:
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
         ruleSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
     
     # Alertmanager Configuration
     alertmanager:

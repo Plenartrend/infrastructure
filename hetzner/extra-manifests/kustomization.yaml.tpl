@@ -16,6 +16,9 @@ resources:
   # Prometheus & Grafana
   - prometheus-helm.yaml
 
+  # Blackbox Exporter
+  - prometheus-blackbox-exporter-helm.yaml
+
   # Chaos Mesh
   - chaos-mesh-helm.yaml
 

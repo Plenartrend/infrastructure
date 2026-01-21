@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: plenartrend-de-http
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  jobName: plenartrend-de-http
+  prober:
+    url: prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
+  module: http_2xx
+  targets:
+    staticConfig:
+      static:
+        - https://plenartrend.de
+
