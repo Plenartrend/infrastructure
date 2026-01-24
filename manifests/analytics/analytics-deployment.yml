@@ -42,12 +42,17 @@ spec:
               secretKeyRef:
                 name: postgres-admin-secret
                 key: password
-          - name: DATABASE_HOST_NAME
+          - name: DATABASE_HOST
             value: "postgresql-db-rw.plenartrend.svc.cluster.local"
           - name: DATABASE_PORT
             value: "5432"
           - name: DATABASE_NAME
             value: "plenartrenddb"
+          - name: DEEPSEEK_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: deepseek-api-key-secret
+                key: DEEPSEEK_API_KEY
         resources:
           requests:
             memory: "256Mi"
