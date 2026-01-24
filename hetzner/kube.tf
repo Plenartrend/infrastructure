@@ -253,7 +253,7 @@ module "kube-hetzner" {
   # Enable monitoring for etcd, proxy, controller-manager, scheduler and kubelet
   control_planes_custom_config = {
     etcd-expose-metrics          = true
-    kube-controller-manager-arg  = "bind-address=0.0.0.0"
+    kube-controller-manager-arg = ["bind-address=0.0.0.0", "node-monitor-grace-period=16s"]
     kube-proxy-arg               = "metrics-bind-address=0.0.0.0"
     kube-scheduler-arg           = "bind-address=0.0.0.0"
   }
@@ -731,6 +731,7 @@ module "kube-hetzner" {
   # Make sure you set "feature-gates=NodeSwap=true,CloudDualStackNodeIPs=true" if want to use swap_size
   # see https://github.com/k3s-io/k3s/issues/8811#issuecomment-1856974516
   # k3s_global_kubelet_args = ["kube-reserved=cpu=100m,ephemeral-storage=1Gi", "system-reserved=cpu=memory=200Mi", "image-gc-high-threshold=50", "image-gc-low-threshold=40"]
+  k3s_global_kubelet_args = ["node-status-update-frequency=4s"]
   # k3s_control_plane_kubelet_args = []
   # k3s_agent_kubelet_args = []
   # k3s_autoscaler_kubelet_args = []
