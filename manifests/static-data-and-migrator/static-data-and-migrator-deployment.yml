@@ -51,7 +51,7 @@ spec:
           - name: DIP_API_Key
             value: "OSOegLs.PR2lwJ1dwCeje9vTj7FPOt3hvpYKtwKkhw"
           - name: INGEST_ACTIVITIES_START_DATE
-            value: "2020-08-01T00:00:00Z"
+            value: "2024-08-01T00:00:00Z"
           - name: BEGIN_INGESTION_ON_STARTUP
             value: "false"
           - name: INGESTION_INTERVAL_MINUTES

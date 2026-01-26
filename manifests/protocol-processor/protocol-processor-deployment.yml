@@ -58,7 +58,7 @@ spec:
           - name: BEGIN_PROCESSING_ON_STARTUP
             value: "false"
           - name: PROCESS_START_DATE
-            value: "2020-08-01T00:00:00Z"
+            value: "2024-08-01T00:00:00Z"
           - name: PROCESS_END_DATE
             value: "2025-08-01T00:00:00Z"
         ports:
