@@ -205,7 +205,7 @@ module "kube-hetzner" {
   agent_nodepools = [
     {
       name        = "worker-node-one",
-      server_type = "cx23",
+      server_type = "cx33",
       location    = "nbg1",
       labels      = [],
       taints      = [],
@@ -222,7 +222,7 @@ module "kube-hetzner" {
     },
     {
       name        = "worker-node-two",
-      server_type = "cx23",
+      server_type = "cx33",
       location    = "nbg1",
       labels      = [],
       taints      = [],
@@ -236,7 +236,7 @@ module "kube-hetzner" {
     },
     {
       name        = "worker-node-three",
-      server_type = "cx23",
+      server_type = "cx33",
       location    = "hel1",
       labels      = [],
       taints      = [],
