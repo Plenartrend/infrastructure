@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plenartrend-protocol-processor
+  namespace: plenartrend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: plenartrend-protocol-processor
+  template:
+    metadata:
+      labels:
+        app: plenartrend-protocol-processor
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - plenartrend-protocol-processor
+              topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+      - name: docker-registry-secret
+      containers:
+      - name: protocol-processor
+        image: registry.sokutan.de/plenartrend/protocol-processor:bc67bb79b22280ad8f294fedeb58daf5c6c9c589
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-admin-secret
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-admin-secret
+                key: password
+          - name: DATABASE_HOST
+            value: "postgresql-db-rw.plenartrend.svc.cluster.local"
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_NAME
+            value: "plenartrenddb"
+          - name: GEMINI_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: gemini-api-key-secret
+                key: GEMINI_API_KEY
+          - name: NUM_WORKERS
+            value: "4"
+          - name: BEGIN_PROCESSING_ON_STARTUP
+            value: "false"
+          - name: PROCESS_START_DATE
+            value: "2020-08-01T00:00:00Z"
+          - name: PROCESS_END_DATE
+            value: "2025-08-01T00:00:00Z"
+        ports:
+          - containerPort: 8080
+            name: http
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+
