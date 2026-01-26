@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plenartrend-static-data-and-migrator
+  namespace: plenartrend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: plenartrend-static-data-and-migrator
+  template:
+    metadata:
+      labels:
+        app: plenartrend-static-data-and-migrator
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - plenartrend-static-data-and-migrator
+              topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+      - name: docker-registry-secret
+      containers:
+      - name: static-data-and-migrator
+        image: registry.sokutan.de/plenartrend/static-data-and-migrator:b762c13df6d6973508bcf1be81ae948dd354c438
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-admin-secret
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-admin-secret
+                key: password
+          - name: DATABASE_HOST
+            value: "postgresql-db-rw.plenartrend.svc.cluster.local"
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_NAME
+            value: "plenartrenddb"
+          - name: DIP_API_Key
+            value: "OSOegLs.PR2lwJ1dwCeje9vTj7FPOt3hvpYKtwKkhw"
+          - name: INGEST_ACTIVITIES_START_DATE
+            value: "2020-08-01T00:00:00Z"
+          - name: BEGIN_INGESTION_ON_STARTUP
+            value: "false"
+          - name: INGESTION_INTERVAL_MINUTES
+            value: "60"
+        ports:
+          - containerPort: 8080
+            name: http
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+
