@@ -54,9 +54,9 @@ spec:
                 name: gemini-api-key-secret
                 key: GEMINI_API_KEY
           - name: NUM_WORKERS
-            value: "4"
+            value: "8"
           - name: BEGIN_PROCESSING_ON_STARTUP
-            value: "false"
+            value: "true"
           - name: PROCESS_START_DATE
             value: "2025-06-01T00:00:00Z"
           - name: PROCESS_END_DATE
