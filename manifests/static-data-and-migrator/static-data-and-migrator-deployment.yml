@@ -53,7 +53,7 @@ spec:
           - name: INGEST_ACTIVITIES_START_DATE
             value: "2025-06-01T00:00:00Z"
           - name: BEGIN_INGESTION_ON_STARTUP
-            value: "false"
+            value: "true"
           - name: INGESTION_INTERVAL_MINUTES
             value: "120"
         ports:
