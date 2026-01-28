@@ -48,6 +48,8 @@ spec:
             value: "5432"
           - name: DATABASE_NAME
             value: "plenartrenddb"
+          - name: PROCESS_START_DATE
+            value: "2026-12-31T00:00:00+00:00"
           - name: DEEPSEEK_API_KEY
             valueFrom:
               secretKeyRef:

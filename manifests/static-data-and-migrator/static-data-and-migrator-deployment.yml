@@ -4,7 +4,7 @@ metadata:
   name: plenartrend-static-data-and-migrator
   namespace: plenartrend
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: plenartrend-static-data-and-migrator
@@ -50,12 +50,12 @@ spec:
             value: "plenartrenddb"
           - name: DIP_API_Key
             value: "OSOegLs.PR2lwJ1dwCeje9vTj7FPOt3hvpYKtwKkhw"
-          - name: INGEST_ACTIVITIES_START_DATE
-            value: "2025-06-01T00:00:00Z"
           - name: BEGIN_INGESTION_ON_STARTUP
             value: "true"
           - name: INGESTION_INTERVAL_MINUTES
-            value: "120"
+            value: "60"
+          - name: LOG_LEVEL
+            value: "info"
         ports:
           - containerPort: 8080
             name: http
