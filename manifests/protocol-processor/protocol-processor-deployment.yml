@@ -56,11 +56,9 @@ spec:
           - name: NUM_WORKERS
             value: "8"
           - name: BEGIN_PROCESSING_ON_STARTUP
-            value: "false"
+            value: "true"
           - name: PROCESS_START_DATE
             value: "2025-06-01T00:00:00Z"
-          - name: PROCESS_END_DATE
-            value: "2026-01-01T00:00:00Z"
         ports:
           - containerPort: 8080
             name: http
