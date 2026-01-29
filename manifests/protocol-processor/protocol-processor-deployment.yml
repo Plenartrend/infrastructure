@@ -51,7 +51,7 @@ spec:
           - name: GEMINI_API_KEY
             valueFrom:
               secretKeyRef:
-                name: gemini-api-key-secret
+                name: gemini-api-key-max-secret
                 key: GEMINI_API_KEY
           - name: NUM_WORKERS
             value: "8"
