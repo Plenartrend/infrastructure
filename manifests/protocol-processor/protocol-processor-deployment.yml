@@ -29,7 +29,7 @@ spec:
       - name: docker-registry-secret
       containers:
       - name: protocol-processor
-        image: registry.sokutan.de/plenartrend/protocol-processor:6f827d3c4ec2d248696d1bb01d824c56a110567b
+        image: registry.sokutan.de/plenartrend/protocol-processor:9f9f0a293c4468c3d3b3c0b76b2794bff5da4014
         imagePullPolicy: IfNotPresent
         env:
           - name: DATABASE_USER
