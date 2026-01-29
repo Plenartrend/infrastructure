@@ -29,7 +29,7 @@ spec:
       - name: docker-registry-secret
       containers:
       - name: static-data-and-migrator
-        image: registry.sokutan.de/plenartrend/static-data-and-migrator:579e84a558d837b9b1c37fcc979eec7fcbee549a
+        image: registry.sokutan.de/plenartrend/static-data-and-migrator:c3189a7dcf84d8fd9f345d9776034c05165e9524
         imagePullPolicy: IfNotPresent
         env:
           - name: DATABASE_USER
