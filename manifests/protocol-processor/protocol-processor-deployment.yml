@@ -58,7 +58,7 @@ spec:
           - name: BEGIN_PROCESSING_ON_STARTUP
             value: "true"
           - name: PROCESS_START_DATE
-            value: "2025-01-01T00:00:00Z"
+            value: "2024-06-01T00:00:00Z"
         ports:
           - containerPort: 8080
             name: http
