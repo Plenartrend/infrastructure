@@ -38,6 +38,9 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 3
           failureThreshold: 2
+        env:
+          - name: API_BASE_URL
+            value: "http://plenartrend-crud.plenartrend.svc.cluster.local"
         ports:
         - containerPort: 3000
           name: http
