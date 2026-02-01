@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plenartrend-topics-clusterer
+  namespace: plenartrend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: plenartrend-topics-clusterer
+  template:
+    metadata:
+      labels:
+        app: plenartrend-topics-clusterer
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - plenartrend-topics-clusterer
+              topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+      - name: docker-registry-secret
+      containers:
+      - name: topics-clusterer
+        image: registry.sokutan.de/plenartrend/topics-clusterer:c3189a7dcf84d8fd9f345d9776034c05165e9524
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-admin-secret
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-admin-secret
+                key: password
+          - name: DATABASE_HOST
+            value: "postgresql-db-rw.plenartrend.svc.cluster.local"
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_NAME
+            value: "plenartrenddb"
+          - name: GEMINI_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: gemini-api-key-max-secret
+                key: GEMINI_API_KEY
+          - name: NUM_CLUSTERS
+            value: "50"
+          - name: NUM_CLOSEST_TOPICS
+            value: "5"
+          - name: TOPIC_CLUSTERING_SLEEP_HOURS
+            value: "24"
+          - name: BEGIN_CLUSTERING_ON_STARTUP
+            value: "true"
+          - name: LOG_LEVEL
+            value: "INFO"
+        ports:
+          - containerPort: 8080
+            name: http
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+
