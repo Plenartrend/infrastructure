@@ -53,7 +53,7 @@ spec:
           - name: GEMINI_API_KEY
             valueFrom:
               secretKeyRef:
-                name: gemini-api-key-samuel-secret
+                name: gemini-api-key-simon-secret
                 key: GEMINI_API_KEY
         resources:
           requests:
