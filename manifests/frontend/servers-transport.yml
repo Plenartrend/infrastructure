@@ -1,0 +1,10 @@
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: fast-timeout
+  namespace: plenartrend
+spec:
+  forwardingTimeouts:
+    dialTimeout: "2s"
+    responseHeaderTimeout: "4s"
+    idleConnTimeout: "20s"

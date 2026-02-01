@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: plenartrend-frontend
   namespace: plenartrend
+  annotations:
+    traefik.ingress.kubernetes.io/service.serverstransport: plenartrend-fast-timeout@kubernetescrd
 spec:
   selector:
     app: plenartrend-frontend
