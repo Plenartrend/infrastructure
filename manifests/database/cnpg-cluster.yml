@@ -21,7 +21,7 @@ spec:
   affinity:
     enablePodAntiAffinity: true
     topologyKey: kubernetes.io/hostname
-    podAntiAffinityType: preferred
+    podAntiAffinityType: required
   
   postgresql:
     parameters:
