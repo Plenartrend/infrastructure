@@ -62,7 +62,7 @@ spec:
           - name: BEGIN_CLUSTERING_ON_STARTUP
             value: "true"
           - name: LOG_LEVEL
-            value: "INFO"
+            value: "info"
         ports:
           - containerPort: 8080
             name: http
