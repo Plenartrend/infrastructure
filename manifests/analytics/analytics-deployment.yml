@@ -49,7 +49,7 @@ spec:
           - name: DATABASE_NAME
             value: "plenartrenddb"
           - name: PROCESS_START_DATE
-            value: "2024-06-01T00:00:00+00:00"
+            value: "2024-01-01T00:00:00+00:00"
           - name: GEMINI_API_KEY
             valueFrom:
               secretKeyRef:
