@@ -29,7 +29,7 @@ spec:
       - name: docker-registry-secret
       containers:
       - name: frontend
-        image: registry.sokutan.de/plenartrend/frontend:9d327c3e26b6e0d8e2f792e68d8531a851e304f0
+        image: registry.sokutan.de/plenartrend/frontend:48667457eb67d7e231cdf1e5376ba8203a56993d
         imagePullPolicy: IfNotPresent
         readinessProbe:
           httpGet:
