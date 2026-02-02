@@ -29,7 +29,7 @@ spec:
       - name: docker-registry-secret
       containers:
       - name: crud
-        image: registry.sokutan.de/plenartrend/crud:f14ce4b7647052ba5826d4baf835821270aebe7a
+        image: registry.sokutan.de/plenartrend/crud:22fc181fc76de549d296f54061210124246360a0
         imagePullPolicy: IfNotPresent
         env:
           - name: DATABASE_USER
