@@ -29,7 +29,7 @@ spec:
       - name: docker-registry-secret
       containers:
       - name: topics-clusterer
-        image: registry.sokutan.de/plenartrend/topics-clusterer:a793c741f5e6913e8fcf0583c3872ab091a1f983
+        image: registry.sokutan.de/plenartrend/topics-clusterer:2f3f7f72b3317c1bca7599b68369240ad358a3e6
         imagePullPolicy: IfNotPresent
         env:
           - name: DATABASE_USER
