@@ -29,7 +29,7 @@ spec:
       - name: docker-registry-secret
       containers:
       - name: analytics
-        image: registry.sokutan.de/plenartrend/analytics:d13df8afd7b3e9120c44a27f569327d247317c33
+        image: registry.sokutan.de/plenartrend/analytics:732aa117e2a205e19de863b508221b141ba9a257
         imagePullPolicy: IfNotPresent
         env:
           - name: DATABASE_USER
