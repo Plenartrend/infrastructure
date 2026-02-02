@@ -4,7 +4,7 @@ metadata:
   name: plenartrend-analytics
   namespace: plenartrend
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       app: plenartrend-analytics
@@ -60,6 +60,5 @@ spec:
             memory: "256Mi"
             cpu: "200m"
           limits:
-            memory: "1Gi"
+            memory: "2Gi"
             cpu: "1000m"
-
