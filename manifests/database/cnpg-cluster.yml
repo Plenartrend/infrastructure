@@ -4,11 +4,8 @@ metadata:
   name: postgresql-db
   namespace: plenartrend
 spec:
-  instances: 3
+  instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:16
-
-  minSyncReplicas: 1
-  maxSyncReplicas: 1
 
   enableSuperuserAccess: true
   superuserSecret:

@@ -4,7 +4,7 @@ metadata:
   name: plenartrend-protocol-processor
   namespace: plenartrend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: plenartrend-protocol-processor
