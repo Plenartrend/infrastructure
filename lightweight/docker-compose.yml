@@ -1,0 +1,60 @@
+services:
+  frontend:
+    image: registry.sokutan.de/plenartrend/frontend:dd4bdb114356d788b1a4af5b4b2cc4de3d7b5f9d
+    container_name: plenartrend-frontend
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.plenartrend-frontend.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.plenartrend-frontend.entrypoints=websecure"
+      - "traefik.http.routers.plenartrend-frontend.tls=true"
+      - "traefik.http.routers.plenartrend-frontend.tls.certresolver=cloudflare"
+      - "traefik.http.services.plenartrend-frontend.loadbalancer.server.port=3000"
+    env_file:
+      - .env
+    networks:
+      - web
+
+  crud: 
+    image: registry.sokutan.de/plenartrend/crud:cd3dfefe1a869cf408ab9c55cfc1f55e50f27091
+    container_name: plenartrend-crud
+    restart: unless-stopped
+    env_file: 
+      - .env
+    networks:
+      - web
+      - plenartrend
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: plenartrend-db
+    restart: unless-stopped
+    volumes:
+      - plenartrend:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - plenartrend
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=4MB
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+
+networks:
+  web:
+    external: true 
+  
+  plenartrend: 
+
+volumes: 
+  plenartrend:
